@@ -50,7 +50,7 @@ function draw(params={}){
 	// notice these arrays are passed "by reference" 
 	//analyserNode.getByteFrequencyData(audioData);
 	// OR
-	analyserNode.getByteTimeDomainData(audioData); // waveform data
+	//analyserNode.getByteTimeDomainData(audioData); // waveform data
 	
 	// 2 - draw background
 	ctx.save();
@@ -59,6 +59,77 @@ function draw(params={}){
     ctx.fillRect(0,0,canvasWidth,canvasHeight/2);
     ctx.restore();
 
+    //draw bars before drawing the ocean or sun, for proper layering
+    
+    if(params.showBars){
+        
+        analyserNode.getByteFrequencyData(audioData);
+        
+        let heightMod = .25;
+        let barSpacing = 4;
+        let margin = 5;
+        let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
+        let barWidth = screenWidthForBars / audioData.length;
+        let barHeight = 200;
+        let topSpacing = 100;
+        
+        ctx.save();
+        ctx.fillStyle = barGradient;//'rgba(0,255,0,0.50)';
+        ctx.strokeStyle = '#4169E1';
+        //loop through the data and draw
+        //for(let j = 0; j < 4;j++){
+            
+            //ctx.beginPath();
+            
+            //let heightStep = (canvasHeight/2)*(1/5)
+            
+            //let finalHeight = (canvasHeight/2)+(heightStep*(j+1));
+            
+            //ctx.moveTo(0,finalHeight);
+            
+            for(let i = 0; i < audioData.length; i++){
+            
+                ctx.save();
+            
+                let heightAdj = audioData[i]*heightMod;
+                
+                //ctx.lineTo(margin + i * (barWidth + barSpacing), finalHeight + (heightAdj));
+            
+                ctx.translate(margin + i * (barWidth + barSpacing), canvasHeight/2);
+            
+                //ctx.fillRect(0,0,barWidth,heightAdj);
+
+                ctx.rotate(degree*(Math.PI/180));
+            
+                ctx.fillRect(-barWidth,0,barWidth,heightAdj);
+            
+                    /*
+                    ctx.save();
+            
+                //ctx.translate(margin + i * (barWidth - (barWidth/2) + barSpacing), canvasHeight/2);
+                    ctx.rotate(degree*(Math.Pi/180));
+                //ctx.translate(0, 0);
+                //ctx.translate(margin + i * (barWidth + barSpacing), canvasHeight/2);
+            
+            
+            
+                    ctx.restore();*/
+                    //ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256-audioData[i],barWidth,barHeight);
+                ctx.restore();
+            
+            //}
+            
+            //ctx.closePath();
+            //ctx.lineTo(canvasWidth, finalHeight);
+            
+            //ctx.stroke();
+            
+        }
+
+        ctx.restore();
+        
+    }
+    
     ctx.save();
     
     ctx.fillStyle = "yellow";
@@ -79,6 +150,8 @@ function draw(params={}){
     
     ctx.restore();
     
+    //draw ocean "waves" after a background
+    
 	// 3 - draw gradient
 	if(params.showGradient){
         
@@ -89,8 +162,10 @@ function draw(params={}){
         ctx.restore();
         
     }
-	// 4 - draw bars
-	if(params.showBars){
+	// 4 - draw lines
+	if(params.showLines){
+        
+        analyserNode.getByteTimeDomainData(audioData); // waveform data
         
         let heightMod = .05;
         let barSpacing = 4;
@@ -156,6 +231,7 @@ function draw(params={}){
         ctx.restore();
         
     }
+
 	// 5 - draw circles
     if(params.showCircles){
     

@@ -14,6 +14,7 @@ const drawParams = {
     
     showGradient: true,
     showBars: true,
+    showLines: true,
     showCircles: false,
     showNoise: false,
     showInvert: false,
@@ -144,6 +145,15 @@ function setupUI(canvasElement){
         
         console.log(barCheck.checked);
         drawParams.showBars = barCheck.checked;
+        
+    }
+    
+    let lineCheck = document.querySelector("#linesCB");
+    
+    lineCheck.onclick = () =>{
+        
+        console.log(lineCheck.checked);
+        drawParams.showLines = lineCheck.checked;
         
     }
     
